@@ -15,10 +15,13 @@
     <el-row>
      <el-col :span="24">
      <div style="padding:0.5rem;">
+      <el-button type="primary"  @click="saveData">保存</el-button>
+      <el-button type="primary"  @click="readData">读取</el-button>
       <el-button type="primary"  @click="dialogVisible = true">导出当前课表</el-button>
       <el-button type="primary"  @click="open2">使用帮助</el-button>
       <el-button type="primary"  @click="open3">关于选课助手</el-button>
       <el-button type="primary"  @click="blog">开发博客</el-button>
+      <el-button type="primary"  @click="github">开源代码</el-button>
       <el-button type="primary"  @click="open4">分享</el-button>
       </div>
       </el-col>
@@ -188,8 +191,29 @@ export default {
           type: 'success'
         });
     },
+    saveData(){
+      var courseWaited = JSON.stringify(this.courseWaited)
+      localStorage.setItem('courseWaited',courseWaited);
+      var courseSelected = JSON.stringify(this.courseSelected)
+      localStorage.setItem('courseSelected',courseSelected);
+      this.$message({
+          message: '已成功保存当前状态',
+          type: 'success'
+        });
+    },
+    readData(){
+      this.courseWaited = JSON.parse(localStorage.getItem('courseWaited'))
+      this.courseSelected = JSON.parse(localStorage.getItem('courseSelected'))
+      this.$message({
+          message: '已成功读取上次的数据',
+          type: 'success'
+        });
+    },
     blog(){
       window.open('http://blog.shuhelper.cn/')
+    },
+    github(){
+      window.open('https://github.com/cosformula/CourseSchedulingHelper')
     },
     open1() {
       var str = ''
