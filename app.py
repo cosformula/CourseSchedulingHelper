@@ -32,14 +32,16 @@ def index():
     return 'it works!'
 @app.route('/getcourse')
 def query():
+    courseno = request.args.get('courseno')
     coursename = request.args.get('coursename')
     teachname = request.args.get('teachname')
     coursetime = request.args.get('coursetime')
     credit = request.args.get('credit')
     campus = request.args.get('campus')
     page = int(request.args.get('page'))
-    print('record',coursename,teachname,coursetime,credit,campus,page)
-    coursesquery = Courses.query.filter(Courses.coursename.like('%%%s%%'%coursename))\
+    print('record',courseno,coursename,teachname,coursetime,credit,campus,page)
+    coursesquery = Courses.query.filter(Courses.courseno.like('%%%s%%'%courseno))\
+    .filter(Courses.coursename.like('%%%s%%'%coursename))\
     .filter(Courses.teachname.like('%%%s%%'%teachname))\
     .filter(Courses.coursetime.like('%%%s%%'%coursetime))
     if credit != '':
@@ -47,18 +49,22 @@ def query():
     if campus != '':
         coursesquery = coursesquery.filter(Courses.campus.like('%s'%campus))
     courses = coursesquery.paginate(page,per_page=50,error_out=False)
-    coursedata = []
+    coursedata = {}
+    coursedatalist = []
     for course in courses.items:
-        coursedata.append({'courseno':course.courseno,
+        coursedatalist.append({'courseno':course.courseno,
         'coursename':course.coursename,
         'teachname':course.teachname,
         'teachno':course.teachno,
         'coursetime':course.coursetime,
         'campus':course.campus,
         'capacity':course.capacity,
+        'school':course.school,
         'enroll':course.enroll,
         'tag':course.tag,
         'credit':course.credit})
+    coursedata['total'] = courses.total
+    coursedata['list'] = coursedatalist
     json_str = json.dumps(coursedata)
     return json_str
     

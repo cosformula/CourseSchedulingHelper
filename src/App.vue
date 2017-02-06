@@ -1,10 +1,10 @@
 <template>
   <div id="app">
   <el-row>
-    <el-col :span="10"><schedule 
+    <el-col :span="8"><schedule 
           :task-detail="courseSelected"
           /></el-col>
-    <el-col :span="14">
+    <el-col :span="16">
     <el-row>
     <el-col :span="24">
     <img src="http://forthebadge.com/images/badges/built-with-love.svg"/>
@@ -14,15 +14,18 @@
     </el-row>
     <el-row>
      <el-col :span="24">
-     <div style="padding:0.5rem;">
+     <div style="padding-top:0.5rem;padding-bottom:0.5rem;">
+     <el-button-group>
       <el-button type="primary"  @click="saveData">保存</el-button>
       <el-button type="primary"  @click="readData">读取</el-button>
-      <el-button type="primary"  @click="dialogVisible = true">导出当前课表</el-button>
-      <el-button type="primary"  @click="open2">使用帮助</el-button>
-      <el-button type="primary"  @click="open3">关于选课助手</el-button>
+      <el-button type="primary"  @click="dialogVisible = true">导出</el-button>
+      <el-button type="primary"  @click="clearData">清空</el-button>
+      </el-button-group>
+      <el-button-group>
+      <el-button type="primary"  @click="about">关于我们</el-button>
       <el-button type="primary"  @click="blog">开发博客</el-button>
       <el-button type="primary"  @click="github">开源代码</el-button>
-      <el-button type="primary"  @click="open4">分享</el-button>
+      </el-button-group>
       </div>
       </el-col>
     </el-row>
@@ -202,11 +205,39 @@ export default {
         });
     },
     readData(){
-      this.courseWaited = JSON.parse(localStorage.getItem('courseWaited'))
-      this.courseSelected = JSON.parse(localStorage.getItem('courseSelected'))
-      this.$message({
-          message: '已成功读取上次的数据',
-          type: 'success'
+      if(JSON.parse(localStorage.getItem('courseWaited'))&&JSON.parse(localStorage.getItem('courseSelected'))){
+        this.courseWaited = JSON.parse(localStorage.getItem('courseWaited'))
+        this.courseSelected = JSON.parse(localStorage.getItem('courseSelected'))
+        this.$message({
+            message: '已成功读取上次的数据',
+            type: 'success'
+          });
+      }
+      else{
+        this.$message({
+            message: '无数据',
+            type: 'warning'
+          });
+      }
+      
+    },
+    clearData(){
+      this.$confirm('此操作将删除目前的选课结果且无法恢复, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.courseWaited = []
+          this.courseSelected = [[],[],[],[],[]]
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
         });
     },
     blog(){
@@ -215,39 +246,11 @@ export default {
     github(){
       window.open('https://github.com/cosformula/CourseSchedulingHelper')
     },
-    open1() {
-      var str = ''
-      for(var i=this.courseWaited.length-1;i>=0;i--)
-      {
-        if(this.courseWaited[i].status=='已选入'){
-          str = str + + this.courseWaited[i].courseno + this.courseWaited[i].teachno
-        }
-      }
-        this.$alert('这是一段内容', '当前选中的课表', {
-          confirmButtonText: '确定',
-          callback: action => {
-            this.$message({
-              type: 'info',
-              message: `action: ${ action }`
-            });
-          }
-        });
-    },
-    open2() {
-        this.$alert('等会写', '帮助', {
+    about() {
+        this.$alert('当前版本0.3.1_cosformula@t.shu.edu.cn_SHUhelper开发委员会', '选课助手', {
           confirmButtonText: '确定',
         })
-    },
-    open3() {
-        this.$alert('当前版本0.1.3_cosformula_SHUhelper开发委员会', '选课助手', {
-          confirmButtonText: '确定',
-        })
-    },
-    open4() {
-        this.$alert('xk.shuhelper.cn', '分享', {
-          confirmButtonText: '确定',
-        })
-    },
+    }
   }
 }
 </script>

@@ -1,6 +1,9 @@
 <template>
 <div>
     <el-form :inline="true" ref="form" :model="form" label-width="70px">
+    <el-form-item label="课程号">
+        <el-input v-model="form.courseno" @keyup.enter="onsubmit"></el-input>
+    </el-form-item>
     <el-form-item label="课程名">
         <el-input v-model="form.coursename" @keyup.enter="onsubmit"></el-input>
     </el-form-item>
@@ -76,8 +79,9 @@
     </el-table-column>
     </el-table>
      <el-pagination
-      layout="prev, pager, next"
-      :total="700"
+      layout="total, prev, pager, next, jumper"
+      :page-size="50"
+      :total="total"
       :current-page="page"
       @current-change="handlePageCurrentChange">
     </el-pagination>
@@ -90,6 +94,7 @@
       return {
         tableData:[],
         form: {
+          courseno: '',
           coursename: '',
           teachname: '',
           credit: '',
@@ -98,7 +103,8 @@
         },
         page:1,
         currentRow: null,
-        scroll: true
+        scroll: true,
+        total: 0
       }
     },
     created:function(){
@@ -125,9 +131,10 @@
         this.query()
       },
       query(){
-        this.$http.get('/api/getcourse?coursename='+this.form.coursename+'&teachname='+this.form.teachname+'&coursetime='+this.form.coursetime+'&credit='+this.form.credit+'&campus='+this.form.campus+'&page='+this.page)
+        this.$http.get('/api/getcourse?courseno='+this.form.courseno+'&coursename='+this.form.coursename+'&teachname='+this.form.teachname+'&coursetime='+this.form.coursetime+'&credit='+this.form.credit+'&campus='+this.form.campus+'&page='+this.page)
             .then((response) => {
-                        this.tableData = response.data
+                        this.tableData = response.data.list
+                        this.total = response.data.total
                     })
       },
       handleCurrentChange(val) {
