@@ -67,6 +67,15 @@ var timetable = [
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
   [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
 ]
+function timetableinit(){
+  timetable = [
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+  ]
+}
 export default {
   components: {
       Schedule,
@@ -199,6 +208,8 @@ export default {
       localStorage.setItem('courseWaited',courseWaited);
       var courseSelected = JSON.stringify(this.courseSelected)
       localStorage.setItem('courseSelected',courseSelected);
+      var timetableString = JSON.stringify(timetable)
+      localStorage.setItem('timetable',timetableString); 
       this.$message({
           message: '已成功保存当前状态',
           type: 'success'
@@ -208,6 +219,7 @@ export default {
       if(JSON.parse(localStorage.getItem('courseWaited'))&&JSON.parse(localStorage.getItem('courseSelected'))){
         this.courseWaited = JSON.parse(localStorage.getItem('courseWaited'))
         this.courseSelected = JSON.parse(localStorage.getItem('courseSelected'))
+        timetable = JSON.parse(localStorage.getItem('timetable'))
         this.$message({
             message: '已成功读取上次的数据',
             type: 'success'
@@ -229,6 +241,7 @@ export default {
         }).then(() => {
           this.courseWaited = []
           this.courseSelected = [[],[],[],[],[]]
+          timetableinit()
           this.$message({
             type: 'success',
             message: '删除成功!'
@@ -247,7 +260,7 @@ export default {
       window.open('https://github.com/cosformula/CourseSchedulingHelper')
     },
     about() {
-        this.$alert('当前版本0.3.1_cosformula@t.shu.edu.cn_SHUhelper开发委员会', '选课助手', {
+        this.$alert('当前版本0.3.2_cosformula@t.shu.edu.cn_SHUhelper开发委员会', '选课助手', {
           confirmButtonText: '确定',
         })
     }
