@@ -1,11 +1,11 @@
 <template>
-<div>
+<div  @keyup.enter="onsubmit">
     <el-form :inline="true" ref="form" :model="form" label-width="70px">
     <el-form-item label="课程号">
-        <el-input v-model="form.courseno" @keyup.enter="onsubmit"></el-input>
+        <el-input v-model="form.courseno" ></el-input>
     </el-form-item>
     <el-form-item label="课程名">
-        <el-input v-model="form.coursename" @keyup.enter="onsubmit"></el-input>
+        <el-input v-model="form.coursename"></el-input>
     </el-form-item>
     <el-form-item label="教师名">
         <el-input v-model="form.teachname"></el-input>
@@ -104,23 +104,27 @@
         page:1,
         currentRow: null,
         scroll: true,
-        total: 0
+        total: 0,
+        searchQueryIsDirty: false
       }
     },
-    created:function(){
+    created:function (){
       this.query() 
     },
     watch:{
       form:{
-        handler: function (val, oldVal) {
-          console.log('change') 
-          this.page = 1
-          this.query() 
+        handler: function () {
+          this.searchQueryIsDirty = true
+          this.onFormChange()
         },
         deep: true
       }
     },
     methods: {
+      onFormChange: _.debounce(function () {
+        this.onSubmit()
+        this.searchQueryIsDirty = false
+      }, 500),
       onSubmit() {
         this.page = 1
         this.query()

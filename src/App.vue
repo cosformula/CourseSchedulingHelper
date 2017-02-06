@@ -21,8 +21,29 @@
       <el-button type="primary"  @click="dialogVisible = true">导出</el-button>
       <el-button type="primary"  @click="clearData">清空</el-button>
       </el-button-group>
+      <el-popover
+        ref="popover1"
+        placement="bottom"
+        width="500"
+        trigger="hover">
+        <h2> 排课助手 | SHUhelper</h2>
+        <p>排课助手是SHUhelper的一部分，主要是为了解决排课过程中的困难而制作的小工具，主要实现了搜索课程并从心仪的课程中排列出一份完美的课表的功能。</p>
+        <p>遇到问题请加qq群：368238744 反馈</p>
+        <blockquote>Version 0.3.5 | cosformula@t.shu.edu.cn | SHUhelper 开发委员会</blockquote>
+        <blockquote>♥ Do have faith in what you're doing.</blockquote>
+      </el-popover>
+      <el-popover
+        ref="popover2"
+        placement="bottom"
+        title="欢迎关注我们的微信公众号 搜索：shuhelper 或扫描二维码"
+        width="400"
+        trigger="hover">
+        <img src="http://static.shuhelper.cn/mp.jpg">
+      </el-popover>
       <el-button-group>
-      <el-button type="primary"  @click="about">关于我们</el-button>
+      <el-button type="primary"  v-popover:popover1>关于我们</el-button>
+      <el-button type="primary"  v-popover:popover2 >微信公众号</el-button>
+      <el-button type="primary"  @click="shuhelper">返回主站</el-button>
       <el-button type="primary"  @click="blog">开发博客</el-button>
       <el-button type="primary"  @click="github">开源代码</el-button>
       </el-button-group>
@@ -259,10 +280,8 @@ export default {
     github(){
       window.open('https://github.com/cosformula/CourseSchedulingHelper')
     },
-    about() {
-        this.$alert('当前版本0.3.2_cosformula@t.shu.edu.cn_SHUhelper开发委员会', '选课助手', {
-          confirmButtonText: '确定',
-        })
+    shuhelper(){
+      window.open('https://www.shuhelper.cn/')
     }
   }
 }

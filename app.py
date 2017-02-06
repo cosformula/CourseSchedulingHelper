@@ -2,6 +2,7 @@ from flask import Flask,request
 from flask_sqlalchemy import SQLAlchemy
 import os
 import json
+from datetime import datetime
 app = Flask(__name__)
 
 basedir = os.path.abspath(os.path.dirname(__file__))
@@ -27,6 +28,19 @@ class Courses(db.Model):
     qplace = db.Column(db.String(30))
     school = db.Column(db.String(30))
     tag = db.Column(db.String(30))
+
+class Record(db.Model):
+    __tablename__ = 'record'
+    id = db.Column(db.Integer, primary_key=True)
+    courseno = db.Column(db.String(30))
+    coursename = db.Column(db.String(30))
+    coursetime = db.Column(db.String(30))
+    teachname = db.Column(db.String(30))
+    credit = db.Column(db.String(30))
+    campus = db.Column(db.String(30))
+    page = db.Column(db.Integer)
+    time = db.Column(db.DateTime, default=datetime.now())
+
 @app.route('/')
 def index():
     return 'it works!'
@@ -39,6 +53,16 @@ def query():
     credit = request.args.get('credit')
     campus = request.args.get('campus')
     page = int(request.args.get('page'))
+    record = Record(courseno=courseno,
+                    coursename=coursename,
+                    coursetime = coursetime,
+                    teachname = teachname,
+                    credit = credit,
+                    campus = campus,
+                    page = page,
+                    time=datetime.now())
+    db.session.add(record)
+    db.session.commit()
     print('record',courseno,coursename,teachname,coursetime,credit,campus,page)
     coursesquery = Courses.query.filter(Courses.courseno.like('%%%s%%'%courseno))\
     .filter(Courses.coursename.like('%%%s%%'%coursename))\
