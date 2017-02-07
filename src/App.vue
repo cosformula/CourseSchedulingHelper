@@ -26,11 +26,11 @@
         placement="bottom"
         width="500"
         trigger="hover">
-        <h2> 排课助手 | SHUhelper</h2>
+        <h2> 排课助手 | xk.shuhelper.cn</h2>
         <p>排课助手是SHUhelper的一部分，主要是为了解决排课过程中的困难而制作的小工具，主要实现了搜索课程并从心仪的课程中排列出一份完美的课表的功能。</p>
-        <p>遇到问题请加qq群：368238744 反馈</p>
-        <blockquote>Version 0.3.5 | cosformula@t.shu.edu.cn | SHUhelper 开发委员会</blockquote>
-        <blockquote>♥ Do have faith in what you're doing.</blockquote>
+        <blockquote style="color:grey;">遇到问题请加qq群：368238744 反馈</blockquote>
+        <blockquote style="color:grey;">Version 0.4.0 | cosformula@t.shu.edu.cn | SHUhelper 开发委员会</blockquote>
+        <blockquote><span style="color:red;">♥</span> <span style="color:grey;">Do have faith in what you're doing.</span></blockquote>
       </el-popover>
       <el-popover
         ref="popover2"
@@ -40,8 +40,20 @@
         trigger="hover">
         <img src="http://static.shuhelper.cn/mp.jpg">
       </el-popover>
-      <el-dialog title="16-17春节学期选课系统" v-model="dialogXkVisible" size="large">
-         <iframe src="http://xk.autoisp.shu.edu.cn:8080/" width="100%" height="500"></iframe>
+      <el-dialog title="16-17春季学期选课系统" v-model="dialogXkVisible" size="large">
+      <el-row>
+        <el-col :span="6">
+        <ol>
+          <li v-for="item in courseWaited" v-if="item.status=='已选入'">
+          {{ item.coursename }},{{item.teachname}},{{item.courseno}},{{item.teachno}}
+          </li>
+        </ol>
+        </el-col>
+        <el-col :span="18">
+        <iframe src="http://xk.autoisp.shu.edu.cn:8080/" width="100%" height="500"></iframe>
+        </el-col>
+      </el-row>
+      
       </el-dialog>
       <el-tooltip effect="dark" content="在页面内打开选课系统" placement="bottom">
           <el-button type="primary" @click="dialogXkVisible = true">选课系统</el-button>
