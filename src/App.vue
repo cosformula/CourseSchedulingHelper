@@ -16,10 +16,10 @@
      <el-col :span="24">
      <div style="padding-top:0.5rem;padding-bottom:0.5rem;">
      <el-button-group>
-      <el-button type="primary"  @click="saveData">保存</el-button>
-      <el-button type="primary"  @click="readData">读取</el-button>
-      <el-button type="primary"  @click="dialogVisible = true">导出</el-button>
-      <el-button type="primary"  @click="clearData">清空</el-button>
+        <el-button type="primary"  @click="saveData">保存</el-button>
+        <el-button type="primary"  @click="readData">读取</el-button>
+        <el-button type="primary"  @click="dialogVisible = true">导出</el-button>
+        <el-button type="primary"  @click="clearData">清空</el-button>
       </el-button-group>
       <el-popover
         ref="popover1"
@@ -40,12 +40,18 @@
         trigger="hover">
         <img src="http://static.shuhelper.cn/mp.jpg">
       </el-popover>
+      <el-dialog title="16-17春节学期选课系统" v-model="dialogXkVisible" size="large">
+         <iframe src="http://xk.autoisp.shu.edu.cn:8080/" width="100%" height="500"></iframe>
+      </el-dialog>
+      <el-tooltip effect="dark" content="在页面内打开选课系统" placement="bottom">
+          <el-button type="primary" @click="dialogXkVisible = true">选课系统</el-button>
+      </el-tooltip>
       <el-button-group>
-      <el-button type="primary"  v-popover:popover1>关于我们</el-button>
-      <el-button type="primary"  v-popover:popover2 >微信公众号</el-button>
-      <el-button type="primary"  @click="shuhelper">返回主站</el-button>
-      <el-button type="primary"  @click="blog">开发博客</el-button>
-      <el-button type="primary"  @click="github">开源代码</el-button>
+      <el-button type="primary" v-popover:popover1>关于我们</el-button>
+      <el-button type="primary" v-popover:popover2 >微信公众号</el-button>
+      <el-button type="primary" @click="shuhelper">返回主站</el-button>
+      <el-button type="primary" @click="blog">开发博客</el-button>
+      <el-button type="primary" @click="github">开源代码</el-button>
       </el-button-group>
       </div>
       </el-col>
@@ -107,7 +113,8 @@ export default {
     return {
       courseWaited:[],
       courseSelected:[[],[],[],[],[]],
-      dialogVisible: false
+      dialogVisible: false,
+      dialogXkVisible: false
     }
   },
   computed:{
