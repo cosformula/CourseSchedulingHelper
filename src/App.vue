@@ -7,7 +7,7 @@
     <el-col :span="16">
     <el-row>
     <el-col :span="24">
-       <div style="padding:10px;"><span style="color:grey;">已选学分</span>:{{ credit }}   <span style="color:grey;">当前学期:16-17年春季学期</span></div>
+       <div style="padding:10px;"><span style="color:grey;">当前学期:16-17年春季学期</span></div>
      </el-col>
     </el-row>
     <el-row>
@@ -59,6 +59,7 @@
       <el-button type="primary" @click="dialogAboutVisible = true">关于我们</el-button>
       <el-button type="primary" @click="shuhelper">返回主站</el-button>
       </el-button-group>
+      <span style="color:grey;">已选学分</span>:{{ credit }} 
       </div>
       </el-col>
     </el-row>
@@ -120,7 +121,8 @@ export default {
       courseWaited:[],
       courseSelected:[[],[],[],[],[]],
       dialogXkVisible: false,
-      dialogAboutVisible: false
+      dialogAboutVisible: false,
+      dialogVisible: false
     }
   },
   computed:{
@@ -128,7 +130,7 @@ export default {
       var credit = 0
       for(var i = this.courseWaited.length-1;i>=0;i--){
         if(this.courseWaited[i].status == '已选入'){
-          credit += courseWaited[i].credit
+          credit += parseInt(this.courseWaited[i].credit)
         }
       }
       // console.log(credit)
