@@ -7,9 +7,7 @@
     <el-col :span="16">
     <el-row>
     <el-col :span="24">
-    <img src="http://forthebadge.com/images/badges/built-with-love.svg"/>
-    <img src="http://forthebadge.com/images/badges/uses-js.svg"/>
-    <img src="http://forthebadge.com/images/badges/makes-people-smile.svg"/>
+       <div style="padding:10px;"><span style="color:grey;">已选学分</span>:{{ credit }}   <span style="color:grey;">当前学期:16-17年春季学期</span></div>
      </el-col>
     </el-row>
     <el-row>
@@ -21,25 +19,6 @@
         <el-button type="primary"  @click="dialogVisible = true">导出</el-button>
         <el-button type="primary"  @click="clearData">清空</el-button>
       </el-button-group>
-      <el-popover
-        ref="popover1"
-        placement="bottom"
-        width="500"
-        trigger="hover">
-        <h2> 排课助手 | xk.shuhelper.cn</h2>
-        <p>排课助手是SHUhelper的一部分，主要是为了解决排课过程中的困难而制作的小工具，主要实现了搜索课程并从心仪的课程中排列出一份完美的课表的功能。</p>
-        <blockquote style="color:grey;">遇到问题请加qq群：368238744 反馈</blockquote>
-        <blockquote style="color:grey;">Version 0.4.0 | cosformula@t.shu.edu.cn | SHUhelper 开发委员会</blockquote>
-        <blockquote><span style="color:red;">♥</span> <span style="color:grey;">Do have faith in what you're doing.</span></blockquote>
-      </el-popover>
-      <el-popover
-        ref="popover2"
-        placement="bottom"
-        title="欢迎关注我们的微信公众号 搜索：shuhelper 或扫描二维码"
-        width="400"
-        trigger="hover">
-        <img src="http://static.shuhelper.cn/mp.jpg">
-      </el-popover>
       <el-dialog title="16-17春季学期选课系统" v-model="dialogXkVisible" size="large">
       <el-row>
         <el-col :span="6">
@@ -55,15 +34,30 @@
       </el-row>
       
       </el-dialog>
+      <el-dialog title="关于我们" v-model="dialogAboutVisible" size="small">
+        <p>排课助手(xk.shuhelper.cn)是SHUhelper的一部分，主要是为了解决排课过程中的困难而制作的小工具，主要实现了搜索课程并从心仪的课程中排列出一份完美的课表的功能。</p>
+        <p> 欢迎关注我们的微信公众号 搜索：<span style="color:red;">shuhelper</span> 或扫描下方二维码</p>
+        <p align="center"><img width="100" src="http://static.shuhelper.cn/mp.jpg"></p>
+        <p align="center"> <a href="http://blog.shuhelper.cn/" target="_blank">开发博客</a>    <a href="https://github.com/cosformula/CourseSchedulingHelper" target="_blank">开源代码</a></p>
+        <p align="center">   
+          <img src="http://forthebadge.com/images/badges/built-with-love.svg"/>
+          <img src="http://forthebadge.com/images/badges/uses-js.svg"/>
+          <img src="http://forthebadge.com/images/badges/makes-people-smile.svg"/>
+        </p>
+        <blockquote style="color:grey;">遇到问题请加qq群：<span style="color:red;">368238744</span> 反馈</blockquote>
+        <blockquote style="color:grey;">Version 0.5.0 | cosformula@t.shu.edu.cn | SHUhelper 开发委员会</blockquote>
+        <blockquote><span style="color:red;">♥</span> <span style="color:grey;">Do have faith in what you're doing.</span></blockquote>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogAboutVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
       <el-tooltip effect="dark" content="在页面内打开选课系统" placement="bottom">
           <el-button type="primary" @click="dialogXkVisible = true">选课系统</el-button>
       </el-tooltip>
+       
       <el-button-group>
-      <el-button type="primary" v-popover:popover1>关于我们</el-button>
-      <el-button type="primary" v-popover:popover2 >微信公众号</el-button>
+      <el-button type="primary" @click="dialogAboutVisible = true">关于我们</el-button>
       <el-button type="primary" @click="shuhelper">返回主站</el-button>
-      <el-button type="primary" @click="blog">开发博客</el-button>
-      <el-button type="primary" @click="github">开源代码</el-button>
       </el-button-group>
       </div>
       </el-col>
@@ -125,12 +119,21 @@ export default {
     return {
       courseWaited:[],
       courseSelected:[[],[],[],[],[]],
-      dialogVisible: false,
-      dialogXkVisible: false
+      dialogXkVisible: false,
+      dialogAboutVisible: false
     }
   },
   computed:{
-
+    credit: function(){
+      var credit = 0
+      for(var i = this.courseWaited.length-1;i>=0;i--){
+        if(this.courseWaited[i].status == '已选入'){
+          credit += courseWaited[i].credit
+        }
+      }
+      // console.log(credit)
+      return credit
+    }
   },
   methods: {
     addCourse:function(course){
@@ -271,7 +274,6 @@ export default {
             type: 'warning'
           });
       }
-      
     },
     clearData(){
       this.$confirm('此操作将删除目前的选课结果且无法恢复, 是否继续?', '提示', {
@@ -292,12 +294,6 @@ export default {
             message: '已取消删除'
           });          
         });
-    },
-    blog(){
-      window.open('http://blog.shuhelper.cn/')
-    },
-    github(){
-      window.open('https://github.com/cosformula/CourseSchedulingHelper')
     },
     shuhelper(){
       window.open('https://www.shuhelper.cn/')
