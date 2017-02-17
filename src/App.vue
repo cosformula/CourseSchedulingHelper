@@ -201,7 +201,7 @@ export default {
     pull:function(code){
       this.$http.get('/api/pull?code=' + code)
             .then((response) => {
-              this.courseWaited = JSON.parse(response.data)
+              this.courseWaited = response.data
                 this.$message({
                   message: '已成功拉取云端的数据',
                   type: 'success'
