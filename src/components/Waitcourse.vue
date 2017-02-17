@@ -2,12 +2,13 @@
   <el-table
     :data="courseWaited"
     highlight-current-row
-    height="550"
+    height="500"
     border
     style="width: 100%">
     <el-table-column
       label="课程名"
-      width="200">
+      width="200"
+      sortable>
     <template scope="scope">
         <el-popover trigger="hover" placement="left">
         <p>课程名: {{ scope.row.coursename }}</p>
@@ -25,33 +26,37 @@
     <el-table-column
       prop="teachname"
       label="教师"
-      width="100">
+      width="100"
+      sortable>
     </el-table-column>
     <el-table-column
       prop="coursetime"
       label="时间"
-      width="100">
+      width="100"
+      sortable>
     </el-table-column>
     <el-table-column
       prop="enroll"
       label="人数"
-      width="70">
+      width="90"
+      sortable>
     </el-table-column>
     <el-table-column
       prop="status"
       label="状态"
-      width="100">
+      width="90"
+      sortable>
     </el-table-column>
     <el-table-column label="操作">
       <template scope="scope">
         <el-button
           size="small"
           v-if="scope.row.status=='待加入'"
-          @click="addSchedule(scope.$index, scope.row)">加入课程表</el-button>
+          @click="addSchedule(scope.row)">加入课程表</el-button>
         <el-button
           size="small"
           type="danger"
-          @click="delCourse(scope.$index, scope.row)">{{scope.row.status=='待加入'?'从待选课程中删除':'从课表中删除'}}</el-button>
+          @click="delCourse(scope.row)">{{scope.row.status=='待加入'?'从待选课程中删除':'从课表中删除'}}</el-button>
       </template>
     </el-table-column>
   </el-table>
@@ -73,12 +78,12 @@
       }
     },
     methods:{
-        addSchedule:function(index,row){
-          this.$emit('addSchedule',index,row)
+        addSchedule:function(row){
+          this.$emit('addSchedule',row)
         },
-        delCourse:function(index,row){
-          console.log('delcourse raw')
-          this.$emit('delCourse',index,row)
+        delCourse:function(row){
+          console.log(row)
+          this.$emit('delCourse',row)
         }
     }
   }

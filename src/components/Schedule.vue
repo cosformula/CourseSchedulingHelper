@@ -1,30 +1,29 @@
 <template>
     <div class="schedule">
     	<div class="time-ground">
-				<div style="height:49.2px;"></div>
-				<div v-for="time in timeGround" style="height:49.2px;margin:0">
+				<div style="height:3.8%;"></div>
+				<div v-for="time in timeGround" style="height:7.4%;margin:0">
 				<span>{{time}}</span>
 				</div>
     	</div>
     	<div class="task-ground">
 				<div v-for="(week,index) in weekGround" class="task-list">
-    				<div style="height:50px;">
-						<p style="margin:0;padding-top:15px;">{{week}}</p>
+    				<div style="height:3.8%;width:100%;">
+						<p style="margin:0;">{{week}}</p>
 						</div>
-    				<div :style="taskListSty">
+    				<div class="taskListSty">
               <div class="task-list-item" 
                   v-for="detail in taskDetail[index]" 
                   :style="detail.styleObj" 
-                  @click="showDetail(detail, week)">
+                  @click="showDetail(detail)">
                 <div>
-    						<h5>{{detail.title}}</h5>
-                <p>{{detail.teacher}}</p>
+    						<h5>{{detail.coursename}}</h5>
+                <p>{{detail.teachname}}</p>
                 </div>
     					</div>
     				</div>
     			</div>
     	</div>
-    	<modal :show.sync="showModal" :show-modal-detail.sync="showModalDetail" @close="closeModal">
     </div>
 </template>
 
@@ -34,6 +33,7 @@
 		max-width: 1400px;
 		margin: 0 auto;
 		position: relative;
+    height:100%;
 	}
 	.time-ground{
 		display: block;
@@ -41,25 +41,30 @@
 		left: 0;
 		top: 0;
 		width: 100%;
+    height:100%;
 	}
-	.time-ground div{
-		border-bottom-style:solid;
+  .time-ground div{
+		box-sizing: border-box;
+    border-bottom-style:solid;
 		border-color:#EAEAEA;
 		border-width:1px;
 	}
+
 	.time-ground div span{
 		position: relative;
 		left:-20px;
-		top:20px;
+		top:10px;
 	}
 	.task-ground{
 		width: 100%;
+    height:100%;
 	}
 	.task-list{
 		float: left;
 		width: 20%;
 		box-sizing:border-box;
 		border:1px solid #EAEAEA;
+    height:100%;
 	}
 	.task-list p{
 		text-align: center;
@@ -69,7 +74,7 @@
 	.task-list-item{
 		position: absolute;
 		background-color: #577F92;
-		width: 20%;
+		width: 100%;
 		cursor: pointer;
     text-align: center;
     vertical-align:middle;
@@ -86,11 +91,14 @@
 	ul{
 		list-style-type:none;
 	}
+  .taskListSty {
+    position: absolute;
+		height: 96.2%;
+    width:20%;
+    }
 </style>
 
 <script>
-
-import Modal from './Modal.vue';
 
 
 export default {
@@ -128,7 +136,9 @@ export default {
 		},
 		taskDetail: {
 			type: Array,
-			default: []
+      default(){
+				return []
+      }
 		},
 		color: {
 			type: Array,
@@ -145,40 +155,16 @@ export default {
 			}
 		}
 	},
-	components: {
-		Modal: Modal
-	},
 	data() {
 		return {
-			showModal: false,
-			showModalDetail: {
-				dateStart: '09:30',
-				dateEnd: '10:30',
-				title: 'Metting',
-				week: 'Monday',
-				styleObj: {
-					backgroundColor: "#0000"
-				},
-				detail: 'Metting (German: Mettingen) is a commune in the Moselle department in Grand Est in north-eastern France.'
-			},
-			taskListSty: {
-				height: '650px'
-			}
+			showModal: false
 		}
 	},
-	compiled() {
-		this.taskListSty.height = (this.timeGround.length - 1) * 100 + 'px';
-	},
 	methods: {
-		showDetail(obj, week){
-			obj.week = week;
-			this.showModalDetail = obj;
-			this.showModal = true;
-		},
-    closeModal:function () {
-      this.showModal = false
-    }
-    
+		showDetail(obj){
+      console.log('showDetail raw')
+      this.$emit('showDetail',obj)
+		} 
 	}
 }
 </script>

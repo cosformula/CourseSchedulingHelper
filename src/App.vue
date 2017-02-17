@@ -1,8 +1,8 @@
 <template>
   <div id="app">
-  <el-row>
-    <el-col :span="8"><schedule 
-          :task-detail="courseSelected"
+  <el-row style="height:95%;padding-top:10px;">
+    <el-col :span="8" style="height:100%;"><schedule 
+          :task-detail="courseSelected" @showDetail="showDetail"
           /></el-col>
     <el-col :span="16">
     <el-row>
@@ -11,14 +11,28 @@
      </el-col>
     </el-row>
     <el-row>
-     <el-col :span="24">
+     <el-col :span="24" style="height:100%;">
      <div style="padding-top:0.5rem;padding-bottom:0.5rem;">
      <el-button-group>
-        <el-button type="primary"  @click="saveData">保存</el-button>
-        <el-button type="primary"  @click="readData">读取</el-button>
-        <el-button type="primary"  @click="dialogVisible = true">导出</el-button>
-        <el-button type="primary"  @click="clearData">清空</el-button>
+        <el-button type="primary" @click="saveData">保存</el-button>
+        <el-button type="primary" @click="readData">读取</el-button>
+        <el-button type="primary" @click="dialogVisible = true">导出</el-button>
+        <el-button type="primary" @click="clearData">清空</el-button>
       </el-button-group>
+      <el-tooltip effect="dark" content="在页面内打开选课系统" placement="bottom">
+          <el-button type="primary" @click="dialogXkVisible = true">快捷选课</el-button>
+      </el-tooltip>
+      <el-tooltip effect="dark" content="生成当前课表的唯一链接并保存到云端 可在任意设备上查看" placement="bottom">
+          <el-button type="primary" @click="push">分享课表</el-button>
+      </el-tooltip>
+      <el-button-group>
+      <el-button type="primary" @click="dialogAboutVisible = true">关于我们</el-button>
+      <el-button type="primary" @click="shuhelper">返回主站</el-button>
+      </el-button-group>
+      <span style="color:grey;">已选学分</span>:{{ credit }} 
+      </div>
+      </el-col>
+    </el-row>
       <el-dialog title="16-17春季学期选课系统" v-model="dialogXkVisible" size="large">
       <el-row>
         <el-col :span="6">
@@ -34,6 +48,10 @@
       </el-row>
       
       </el-dialog>
+      <el-dialog title="分享课表" v-model="dialogShareVisible" size="small">
+      <p align="center" v-if="code==''">链接生成中请耐心等待...</p>
+      <p align="center" v-if="code!=''">短链接已生成，您现在可以在任何地方通过 <a :href="'http://xk.shuhelper.cn/'+code" target="_blank">http://xk.shuhelper.cn/{{ code }}</a>访问您的课表，也可以将这个链接分享给他人。</p>
+      </el-dialog>
       <el-dialog title="关于我们" v-model="dialogAboutVisible" size="small">
         <p>排课助手(xk.shuhelper.cn)是SHUhelper的一部分，主要是为了解决排课过程中的困难而制作的小工具，主要实现了搜索课程并从心仪的课程中排列出一份完美的课表的功能。</p>
         <p> 欢迎关注我们的微信公众号 搜索：<span style="color:red;">shuhelper</span> 或扫描下方二维码</p>
@@ -45,25 +63,12 @@
           <img src="http://forthebadge.com/images/badges/makes-people-smile.svg"/>
         </p>
         <blockquote style="color:grey;">遇到问题请加qq群：<span style="color:red;">368238744</span> 反馈</blockquote>
-        <blockquote style="color:grey;">Version 0.5.0 | cosformula@t.shu.edu.cn | SHUhelper 开发委员会</blockquote>
+        <blockquote style="color:grey;">Version 0.8.0 | cosformula@t.shu.edu.cn | SHUhelper 开发委员会</blockquote>
         <blockquote><span style="color:red;">♥</span> <span style="color:grey;">Do have faith in what you're doing.</span></blockquote>
         <span slot="footer" class="dialog-footer">
           <el-button type="primary" @click="dialogAboutVisible = false">确 定</el-button>
         </span>
       </el-dialog>
-      <el-tooltip effect="dark" content="在页面内打开选课系统" placement="bottom">
-          <el-button type="primary" @click="dialogXkVisible = true">选课系统</el-button>
-      </el-tooltip>
-       
-      <el-button-group>
-      <el-button type="primary" @click="dialogAboutVisible = true">关于我们</el-button>
-      <el-button type="primary" @click="shuhelper">返回主站</el-button>
-      </el-button-group>
-      <span style="color:grey;">已选学分</span>:{{ credit }} 
-      </div>
-      </el-col>
-    </el-row>
-
     <el-tabs type="border-card">
       <el-tab-pane label="待选课程">
         <waitcourse :courseWaited="courseWaited" @addSchedule="addSchedule" @delCourse="delCourse"/>
@@ -94,22 +99,6 @@ var cn_num = {
   '四':4,
   '五':5,
 }
-var timetable = [
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-]
-function timetableinit(){
-  timetable = [
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-    [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
-  ]
-}
 export default {
   components: {
       Schedule,
@@ -119,10 +108,19 @@ export default {
   data () {
     return {
       courseWaited:[],
-      courseSelected:[[],[],[],[],[]],
       dialogXkVisible: false,
       dialogAboutVisible: false,
-      dialogVisible: false
+      dialogVisible: false,
+      dialogShareVisible: false,
+      code:''
+    }
+  },
+  created:function(){
+    var code = this.getCode()
+    if(code==null){
+      this.readData()
+    } else{
+      this.pull(code)
     }
   },
   computed:{
@@ -133,11 +131,126 @@ export default {
           credit += parseInt(this.courseWaited[i].credit)
         }
       }
-      // console.log(credit)
       return credit
+    },
+    timeTable:function(){
+      var table = [
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+        [0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+      ]
+      for(var i = this.courseWaited.length-1;i>=0;i--){
+        if(this.courseWaited[i].status == '已选入'){
+          var timelist = this.coursetimeToNum(this.courseWaited[i].coursetime)
+          for(var j = timelist.length-1;j>=0;j--){
+            var day = timelist[j].day
+            for(var x = timelist[j].Start;x <= timelist[j].End;x++){
+              table[day][x] = 1
+            }
+          }
+        }
+      }
+      return table
+    },
+    courseSelected:function(){
+      console.log('courseSelected')
+      var selected = [[],[],[],[],[]]
+      for(var i = this.courseWaited.length-1;i>=0;i--){
+        if(this.courseWaited[i].status == '已选入'){
+          var timelist = this.coursetimeToNum(this.courseWaited[i].coursetime)
+          var color= [
+            "#2B2E4A",
+            "#521262",
+            "#903749",
+            "#53354A",
+            "#40514E",
+            "#537780",
+          ]
+          var course = this.courseWaited[i]
+          var rancolor = color[~~(Math.random() * color.length)]
+          for(var j = timelist.length-1;j>=0;j--){
+            var time = timelist[j]
+            var item = {
+              day:time.day,
+              Start:time.Start,
+              End:time.End,
+              coursename: course.coursename,
+              courseno: course.courseno,
+              teachname: course.teachname,
+              teachno: course.teachno,
+              status:course.status,
+              styleObj:{
+                height: (time.End-time.Start+1) * 7.7 + '%',
+                top: ((time.Start-1) * 7.69 )+ '%',
+                backgroundColor: rancolor
+              }  
+            }
+            selected[time.day].push(item)
+          }
+        }
+      }
+      return selected
     }
   },
   methods: {
+    getCode:function(){
+      return decodeURIComponent((new RegExp('n/'+'([^&;]+?)(&|#|;|$)').exec(location.href)||[,""])[1].replace(/\+/g,'%20'))||null
+    },
+    pull:function(code){
+      this.$http.get('/api/pull?code=' + code)
+            .then((response) => {
+              this.courseWaited = JSON.parse(response.data)
+                this.$message({
+                  message: '已成功拉取云端的数据',
+                  type: 'success'
+                });
+              })
+            .catch(function(response) {
+                console.log(response)
+              })
+    },
+    push:function(){
+      this.dialogShareVisible = true
+      this.code = ''
+      this.$http.post('/api/push',JSON.stringify(this.courseWaited))
+            .then((response) => {
+              this.$message({
+                  message: '已成功推送数据到云端',
+                  type: 'success'
+                });
+              this.code = response.data
+              })
+            .catch(function(response) {
+                console.log(response)
+              })
+    },
+    query(){
+        this.$http.get('/api/getcourse?courseno='+this.form.courseno+'&coursename='+this.form.coursename+'&teachname='+this.form.teachname+'&coursetime='+this.form.coursetime+'&credit='+this.form.credit+'&campus='+this.form.campus+'&page='+this.page)
+            .then((response) => {
+                        this.tableData = response.data.list
+                        this.total = response.data.total
+                    })
+    },
+    showDetail:function(course){
+      this.$confirm('从课表中删除' + course.coursename + course.teachname +', 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.delCourse(course)
+          this.$message({
+            type: 'success',
+            message: '删除成功!'
+          });
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });          
+        });
+    },
     addCourse:function(course){
       var conflict = false
       for(var i = this.courseWaited.length-1;i>=0;i--){
@@ -161,46 +274,38 @@ export default {
         });
       }
     },
-    addSchedule:function(index,course){
-      this.$set(this.courseWaited[index],'status','已选入')
-      var title = course.coursename
-      var teacher = course.teachname
-      var str = course.coursetime
-      var patt = /([\u4e00|\u4e8c|\u4e09|\u56db|\u4e94])([0-9]+)-([0-9]+)\s*(?:([\u5355|\u53cc|])|\((?:([0-9]+)-([0-9]+)\u5468)\)|\((?:([0-9]+),([0-9]+)\u5468)\))*/
-      var items = []
-      var color= [
-        "#2B2E4A",
-        "#521262",
-        "#903749",
-        "#53354A",
-        "#40514E",
-        "#537780",
-			]
-      var rancolor = color[~~(Math.random() * color.length)]
-      // 创建待加入的课程
-      while(patt.test(str)){
-        var coursetime = patt.exec(str)
-        str = str.replace(patt,"")
-        var item = {
+    coursetimeToNum(time){
+       var patt = /([\u4e00|\u4e8c|\u4e09|\u56db|\u4e94])([0-9]+)-([0-9]+)\s*(?:([\u5355|\u53cc|])|\((?:([0-9]+)-([0-9]+)\u5468)\)|\((?:([0-9]+),([0-9]+)\u5468)\))*/
+       var timelist = []
+       var str = time
+       while(patt.test(str)){
+         var coursetime = patt.exec(str)
+         str = str.replace(patt,"")
+         var item = {
           day:parseInt(cn_num[coursetime[1]]-1),
           Start:parseInt(coursetime[2]),
-          End:parseInt(coursetime[3]),
-          title: title,
-          teacher:teacher,
-          teachno:course.teachno,
-          styleObj:{
-            height: (parseInt(coursetime[3])-parseInt(coursetime[2])+1) * 50+ 'px',
-            top: ((parseInt(coursetime[2])-1) * 50) + 50 + 'px',
-            backgroundColor: rancolor
-          }  
+          End:parseInt(coursetime[3])
+         }
+         timelist.push(item)
+       }
+       return timelist
+    },
+    locateCourse(course){
+       for(var i = this.courseWaited.length-1;i>=0;i--){
+        if(this.courseWaited[i].courseno==course.courseno&&this.courseWaited[i].teachno==course.teachno){
+          return i
         }
-        items.push(item)
       }
+      return -1
+    },
+    addSchedule:function(course){
       //检测待加入的课程是否有冲突
+      var index = this.locateCourse(course)
       var conflict = false
-      for(var i = items.length-1;i>=0;i--){
-        for(var j = items[i].Start;j <= items[i].End;j++){
-          if(timetable[items[i].day][j]!=0){
+      var timelist = this.coursetimeToNum(this.courseWaited[index].coursetime)
+      for(var i = timelist.length-1;i>=0;i--){
+        for(var j = timelist[i].Start;j <= timelist[i].End;j++){
+          if(this.timeTable[timelist[i].day][j]!=0){
             conflict = true
           }
         }
@@ -210,39 +315,24 @@ export default {
           message: '课程时间冲突！',
           type: 'warning'
         });
-        this.$set(this.courseWaited[index],'status','待加入')
       }
       else{
-        for(var i = items.length-1;i>=0;i--){
-          this.courseSelected[items[i].day].push(items[i])
-          for(var j = items[i].Start;j <= items[i].End;j++){
-              timetable[items[i].day][j]=1
-            }
-          }
+          this.$set(this.courseWaited[index],'status','已选入')
           this.$message({
           message: '已将此课程加入课程表',
           type: 'success'
         });
       }
     },
-    delCourse:function(index,course){
+    delCourse:function(course){
+      var index = this.locateCourse(course)
+      console.log('delcourse')
       if(course.status=='已选入'){
-        for(var i = 4;i>=0;i--){
-          for(var j=this.courseSelected[i].length-1;j>=0;j--){
-            if(this.courseSelected[i][j].title==course.coursename&&this.courseSelected[i][j].teachno==course.teachno){
-              for(var x = this.courseSelected[i][j].Start;x <= this.courseSelected[i][j].End;x++){
-                timetable[this.courseSelected[i][j].day][x]=0
-              }
-              this.courseSelected[i].splice(j,1)
-            }
-          }
-        }
         this.$set(this.courseWaited[index],'status','待加入')
       }
       else{
         this.courseWaited.splice(index,1)
       }
-      
       this.$message({
           message: '已成功删除该课程',
           type: 'success'
@@ -251,20 +341,14 @@ export default {
     saveData(){
       var courseWaited = JSON.stringify(this.courseWaited)
       localStorage.setItem('courseWaited',courseWaited);
-      var courseSelected = JSON.stringify(this.courseSelected)
-      localStorage.setItem('courseSelected',courseSelected);
-      var timetableString = JSON.stringify(timetable)
-      localStorage.setItem('timetable',timetableString); 
       this.$message({
           message: '已成功保存当前状态',
           type: 'success'
         });
     },
     readData(){
-      if(JSON.parse(localStorage.getItem('courseWaited'))&&JSON.parse(localStorage.getItem('courseSelected'))){
+      if(JSON.parse(localStorage.getItem('courseWaited'))){
         this.courseWaited = JSON.parse(localStorage.getItem('courseWaited'))
-        this.courseSelected = JSON.parse(localStorage.getItem('courseSelected'))
-        timetable = JSON.parse(localStorage.getItem('timetable'))
         this.$message({
             message: '已成功读取上次的数据',
             type: 'success'
@@ -284,7 +368,6 @@ export default {
           type: 'warning'
         }).then(() => {
           this.courseWaited = []
-          this.courseSelected = [[],[],[],[],[]]
           timetableinit()
           this.$message({
             type: 'success',
@@ -307,5 +390,12 @@ export default {
 <style>
 body {
   font-family: Helvetica, sans-serif;
+}
+html,body {
+  height:100%;
+  margin:0;
+}
+#app {
+  height:100%;
 }
 </style>
