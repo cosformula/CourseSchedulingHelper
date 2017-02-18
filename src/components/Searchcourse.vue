@@ -23,9 +23,6 @@
       <el-option label="嘉定" value="嘉定"></el-option>
       <el-option label="延长" value="延长"></el-option>
     </el-select>
-    <el-form-item>
-        <el-button type="primary" @click="onSubmit">查询</el-button>
-    </el-form-item>
     </el-form>
     <el-table
     :data="tableData"
@@ -36,7 +33,7 @@
     <el-table-column
       label="课程名"
       width="200">
-    <template scope="scope">
+      <template scope="scope">
         <el-popover trigger="hover" placement="left">
         <p>课程名: {{ scope.row.coursename }}</p>
         <p>课程号: {{ scope.row.courseno }}</p>
@@ -49,11 +46,17 @@
             <el-tag>{{ scope.row.coursename }}</el-tag>
           </div>
         </el-popover>
+      </template>
     </el-table-column>
     <el-table-column
       prop="teachname"
       label="教师"
       width="80">
+    </el-table-column>
+    <el-table-column
+      prop="courseno"
+      label="课程号"
+      width="100">
     </el-table-column>
     <el-table-column
       prop="credit"
@@ -66,11 +69,19 @@
       width="150">
     </el-table-column>
     <el-table-column
+      label="人数"
+      width="100">
+       <template scope="scope">
+       {{ scope.row.enroll}}/{{ scope.row.capacity}}
+      </template>
+    </el-table-column>
+    <el-table-column
       prop="campus"
       label="校区"
       width="80">
     </el-table-column>
-    <el-table-column label="操作">
+    
+    <el-table-column label="操作" fixed="right">
       <template scope="scope">
         <el-button
           size="small"
