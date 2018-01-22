@@ -47,11 +47,7 @@
         <span style="white-space:nowrap;"> {{ scope.row.teacher_name }}</span>
       </template>
     </el-table-column>
-    <el-table-column
-      prop="credit"
-      label="学分"
-      width="89"
-      sortable>
+    <el-table-column prop="credit" label="学分" width="89" sortable>
     </el-table-column>
     <el-table-column
       prop="time"
@@ -59,17 +55,9 @@
       width="100"
       sortable>
     </el-table-column>
-    <el-table-column
-      prop="enroll"
-      label="人数"
-      width="90"
-      sortable>
+    <el-table-column prop="enroll" label="人数" width="90" sortable>
     </el-table-column>
-    <el-table-column
-      prop="capacity"
-      label="容量"
-      width="90"
-      sortable>
+    <el-table-column prop="capacity" label="容量" width="90" sortable>
     </el-table-column>
     <el-table-column
       prop="status"

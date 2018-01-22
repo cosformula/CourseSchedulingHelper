@@ -6,14 +6,14 @@
     </el-form-item>
     <el-form-item label="课程名">
         <el-input v-model="form.coursename"></el-input>
-    </el-form-item>
-    <el-form-item label="教师名">
+      </el-form-item>
+      <el-form-item label="教师名">
         <el-input v-model="form.teachname"></el-input>
-    </el-form-item>
-    <el-form-item label="学分">
+      </el-form-item>
+      <el-form-item label="学分">
         <el-input v-model="form.credit"></el-input>
-    </el-form-item>
-    <el-form-item label="上课时间">
+      </el-form-item>
+      <el-form-item label="上课时间">
         <el-input placeholder="格式：一1-2" v-model="form.coursetime"></el-input>
     </el-form-item>
     <el-form-item label="校区">
@@ -91,15 +91,10 @@
       width="100">
     </el-table-column>
     </el-table>
-     <el-pagination
-      layout="total, prev, pager, next, jumper"
-      :page-size="50"
-      :total="total"
-      :current-page="page"
-      @current-change="handlePageCurrentChange">
+    <el-pagination layout="total, prev, pager, next, jumper" :page-size="50" :total="total" :current-page="page" @current-change="handlePageCurrentChange">
     </el-pagination>
-
-</div>
+  
+  </div>
 </template>
 <script>
 export default {
