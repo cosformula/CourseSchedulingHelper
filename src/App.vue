@@ -288,14 +288,8 @@ export default {
         this.$message({
           message: '已经加入过此课程',
           type: 'warning'
-<<<<<<< HEAD
         })
       } else {
-=======
-        });
-      }
-      else {
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
         this.$set(course, 'status', '待加入')
         this.courseWaited.push(course)
         this.$message({
@@ -304,21 +298,13 @@ export default {
         })
       }
     },
-<<<<<<< HEAD
     coursetimeToNum(time) {
-=======
-    coursetimeToNum (time) {
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
       var patt = /([\u4e00|\u4e8c|\u4e09|\u56db|\u4e94])([0-9]+)-([0-9]+)\s*(?:([\u5355|\u53cc|])|\((?:([0-9]+)-([0-9]+)\u5468)\)|\((?:([0-9]+),([0-9]+)\u5468)\))*/
       var timelist = []
       var str = time
       while (patt.test(str)) {
         var coursetime = patt.exec(str)
-<<<<<<< HEAD
         str = str.replace(patt, '')
-=======
-        str = str.replace(patt, "")
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
         var item = {
           day: parseInt(cn_num[coursetime[1]] - 1),
           Start: parseInt(coursetime[2]),
@@ -328,33 +314,19 @@ export default {
       }
       return timelist
     },
-<<<<<<< HEAD
     locateCourse(course) {
       for (var i = this.courseWaited.length - 1; i >= 0; i--) {
         if (this.courseWaited[i].course_no == course.course_no && this.courseWaited[i].teacher_no == course.teacher_no) {
-=======
-    locateCourse (course) {
-      for (var i = this.courseWaited.length - 1; i >= 0; i--) {
-        if (this.courseWaited[i].courseno == course.courseno && this.courseWaited[i].teachno == course.teachno) {
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
           return i
         }
       }
       return -1
     },
-<<<<<<< HEAD
     addSchedule: function(course) {
       //检测待加入的课程是否有冲突
       var index = this.locateCourse(course)
       var conflict = false
       var timelist = this.coursetimeToNum(this.courseWaited[index].time)
-=======
-    addSchedule: function (course) {
-      //检测待加入的课程是否有冲突
-      var index = this.locateCourse(course)
-      var conflict = false
-      var timelist = this.coursetimeToNum(this.courseWaited[index].coursetime)
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
       for (var i = timelist.length - 1; i >= 0; i--) {
         for (var j = timelist[i].Start; j <= timelist[i].End; j++) {
           if (this.timeTable[timelist[i].day][j] != 0) {
@@ -366,14 +338,8 @@ export default {
         this.$message({
           message: '课程时间冲突！',
           type: 'warning'
-<<<<<<< HEAD
         })
       } else {
-=======
-        });
-      }
-      else {
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
         this.$set(this.courseWaited[index], 'status', '已选入')
         this.$message({
           message: '已将此课程加入课程表',
@@ -381,27 +347,17 @@ export default {
         })
       }
     },
-<<<<<<< HEAD
     delCourse: function(course) {
-=======
-    delCourse: function (course) {
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
       var index = this.locateCourse(course)
       console.log('delcourse')
       if (course.status == '已选入') {
         this.$set(this.courseWaited[index], 'status', '待加入')
-<<<<<<< HEAD
       } else {
-=======
-      }
-      else {
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
         this.courseWaited.splice(index, 1)
       }
       this.$message({
         message: '已成功删除该课程',
         type: 'success'
-<<<<<<< HEAD
       })
     },
     saveData() {
@@ -413,25 +369,11 @@ export default {
       })
     },
     readData() {
-=======
-      });
-    },
-    saveData () {
-      var courseWaited = JSON.stringify(this.courseWaited)
-      localStorage.setItem('courseWaited', courseWaited);
-      this.$message({
-        message: '已成功保存当前状态',
-        type: 'success'
-      });
-    },
-    readData () {
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
       if (JSON.parse(localStorage.getItem('courseWaited'))) {
         this.courseWaited = JSON.parse(localStorage.getItem('courseWaited'))
         this.$message({
           message: '已成功读取上次的数据',
           type: 'success'
-<<<<<<< HEAD
         })
       } else {
         this.$message({
@@ -441,23 +383,10 @@ export default {
       }
     },
     clearData() {
-=======
-        });
-      }
-      else {
-        this.$message({
-          message: '无数据',
-          type: 'warning'
-        });
-      }
-    },
-    clearData () {
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
       this.$confirm('此操作将删除目前的选课结果且无法恢复, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
-<<<<<<< HEAD
       })
         .then(() => {
           this.courseWaited = []
@@ -475,23 +404,6 @@ export default {
         })
     },
     shuhelper() {
-=======
-      }).then(() => {
-        this.courseWaited = []
-        timetableinit()
-        this.$message({
-          type: 'success',
-          message: '删除成功!'
-        });
-      }).catch(() => {
-        this.$message({
-          type: 'info',
-          message: '已取消删除'
-        });
-      });
-    },
-    shuhelper () {
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
       window.open('https://www.shuhelper.cn/')
     }
   }
@@ -501,20 +413,6 @@ export default {
 <style>
 html body {
   font-family: Helvetica, sans-serif;
-<<<<<<< HEAD
   margin:0;
 }
-=======
-}
-
-html,
-body {
-  height: 100%;
-  margin: 0;
-}
-
-#app {
-  height: 100%;
-}
->>>>>>> b9003694b20dbd0980a959a73ae0a7349f04515d
 </style>
