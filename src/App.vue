@@ -3,28 +3,37 @@
     <el-container style="height:100vh;">
       <el-header style="background: #99a9bf;">
         <el-row style="height:100%;color:white;" justify="space-between" type="flex" align="middle">
-          <el-col :span="6">
-            <div class="grid-content" style="font-size:20px;color:white;">
-              上海大学排课助手
-              <span style="color:#eee;font-size:0.8rem;"> 17-18年春</span>
-            </div>
-          </el-col>
+
           <!-- <el-col :span="12">
             <div class="grid-content">测试 </div>
           </el-col> -->
-          <el-col :span="18" style="text-align:right;color:white;">
+          <el-col :span="8" style="text-align:left;color:white;">
             <el-button-group style="">
               <el-button type="primary" @click="saveData">保存</el-button>
               <el-button type="primary" @click="readData">读取</el-button>
               <el-button type="primary" @click="dialogVisible = true">导出</el-button>
               <el-button type="primary" @click="clearData">清空</el-button>
             </el-button-group>
+          </el-col>
+          <el-col :span="8">
+            <div class="grid-content" style="text-align:center;font-size:20px;color:white;">
+              上海大学排课助手
+              <span style="color:#eee;font-size:0.8rem;"> 17-18年春</span>
+            </div>
+          </el-col>
+          <el-col :span="8" style="text-align:right;color:white;">
+            <!-- <el-button-group style="">
+              <el-button type="primary" @click="saveData">保存</el-button>
+              <el-button type="primary" @click="readData">读取</el-button>
+              <el-button type="primary" @click="dialogVisible = true">导出</el-button>
+              <el-button type="primary" @click="clearData">清空</el-button>
+            </el-button-group> -->
             <el-button-group style="">
               <el-tooltip effect="dark" content="在页面内打开选课系统" placement="bottom">
                 <el-button type="primary" @click="dialogXkVisible = true">快捷选课</el-button>
               </el-tooltip>
-              <el-button type="primary" @click="dialogAboutVisible = true">关于</el-button>
-              <el-button type="primary" @click="shuhelper">返回SHUhelper</el-button>
+              <el-button type="primary" @click="dialogAboutVisible = true">赞助</el-button>
+              <el-button type="primary" @click="shuhelper">返回主站</el-button>
             </el-button-group>
             <el-button type="success">已选学分:{{ credit }}</el-button>
           </el-col>
@@ -47,17 +56,17 @@
           </el-col>
         </el-row>
       </el-main>
-      <el-dialog title="18-19秋季学期选课系统" :visible.sync="dialogXkVisible" width="80%">
+      <el-dialog fullscreen title="18-19秋季学期选课系统" :visible.sync="dialogXkVisible">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="4">
             <ol>
               <li v-for="item in courseWaited" v-if="item.status=='已选入'">
-                {{ item.course_name }},{{item.teacher_name}},{{item.course_no}},{{item.teacher_no}}
+                {{ item.course_name }}，{{item.teacher_name}}<br/>课程号：{{item.course_no}}<br/>教师号：{{item.teacher_no}}
               </li>
             </ol>
           </el-col>
-          <el-col :span="18">
-            <iframe src="http://xk.autoisp.shu.edu.cn:8080/" width="100%" height="500"></iframe>
+          <el-col :span="20">
+            <iframe src="http://xk.autoisp.shu.edu.cn:8080/" width="100%" height="600"></iframe>
           </el-col>
         </el-row>
       </el-dialog>
@@ -66,12 +75,17 @@
         <p align="center" v-if="code!=''">短链接已生成，您现在可以在任何地方通过
           <a :href="'http://xk.shuhelper.cn/'+code" target="_blank">http://xk.shuhelper.cn/{{ code }}</a>访问您的课表，也可以将这个链接分享给他人。</p>
       </el-dialog>
-      <el-dialog title="关于我们" :visible.sync="dialogAboutVisible" size="small">
+      <el-dialog width="90%" title="关于我们" :visible.sync="dialogAboutVisible" size="midumn">
         <p>排课助手(xk.shuhelper.cn)是SHUhelper的一部分，主要是为了解决排课过程中的困难而制作的小工具，主要实现了搜索课程并从心仪的课程中排列出一份完美的课表的功能。</p>
         <p> 欢迎关注我们的微信公众号 搜索：
-          <span style="color:red;">shuhelper</span> 或扫描下方二维码</p>
+          <span style="color:red;">shuhelper</span>
+        </p>
+        <p style="color:red;font-size:0.9rem;font-weight:bold;"> 也请考虑赞助以支持我们的发展(*˘︶˘*).。.:*♡
+        </p>
         <p align="center">
-          <img width="100" src="https://static.shuhelper.cn/mp.jpg">
+          <img width="150" src="https://static.shuhelper.cn/formula/res/wechat.png-payment">
+          <img width="150" src="https://static.shuhelper.cn/formula/res/alipay.jpg-payment">
+          <!-- <img width="100" src="https://static.shuhelper.cn/mp.jpg"> -->
         </p>
         <p align="center">
           <a href="https://github.com/cosformula/CourseSchedulingHelper" target="_blank">开源代码</a>
@@ -374,13 +388,18 @@ export default {
       for (let i = 0; i < this.courseWaited.length; i++) {
         let course = this.courseWaited[i]
         this.$http.get(`/api/courses/class/${course._id.$oid}`).then(response => {
-          this.courseWaited[i] = response.data.course
+          let status = course.status
+          let newCourse = response.data.course
+          this.courseWaited[i].capacity = course.capacity
+          this.courseWaited[i].enroll = course.enroll
+          this.courseWaited[i].teacher_name = course.teacher_name
         })
       }
     },
     readData() {
       if (JSON.parse(localStorage.getItem('courseWaited'))) {
         let courses = JSON.parse(localStorage.getItem('courseWaited'))
+        this.courseWaited = []
         this.courseWaited.push(...courses)
         this.$message({
           message: '已成功读取上次的数据',
