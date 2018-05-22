@@ -1,129 +1,110 @@
-<template lang="html">
+<template>
   <div id="app">
-    <el-container>
-      <el-header  style="text-align: right; ">
-        <span style="color:black;float:left;">上海大学排课助手   <span style="color:grey;font-size:0.8rem;">  17-18年春</span>   </span>
-        <el-button-group style="">
-          <el-button type="primary"
-                    @click="saveData">保存</el-button>
-          <el-button type="primary"
-                    @click="readData">读取</el-button>
-          <el-button type="primary"
-                    @click="dialogVisible = true">导出</el-button>
-          <el-button type="primary"
-                    @click="clearData">清空</el-button>
-        </el-button-group>
-        <el-button-group style="">
-          <el-tooltip effect="dark"
-                      content="在页面内打开选课系统"
-                      placement="bottom">
-            <el-button type="primary"
-                      @click="dialogXkVisible = true">快捷选课</el-button>
-          </el-tooltip>
-          <el-button type="primary"
-                      @click="dialogAboutVisible = true">关于</el-button>
-          <el-button type="primary"
-                      @click="shuhelper">返回SHUhelper</el-button>
-        </el-button-group>
-        <el-button type="success" >已选学分:{{ credit }}</el-button>
-      </el-header>
-      <el-main>
-        <el-row style="padding:0;">
-          <el-col :xs="8" :md="8"
-                  style="min-height:700px;height:90vh;max-height:1000px;">
-            <schedule :task-detail="courseSelected"
-                      @showDetail="showDetail" />
+    <el-container style="height:100vh;">
+      <el-header style="background: #99a9bf;">
+        <el-row style="height:100%;color:white;" justify="space-between" type="flex" align="middle">
+          <el-col :span="6">
+            <div class="grid-content" style="font-size:20px;color:white;">
+              上海大学排课助手
+              <span style="color:#eee;font-size:0.8rem;"> 17-18年春</span>
+            </div>
           </el-col>
-          <el-col :xs="16" :md="16">
-            <el-tabs type="border-card" :tab-position="'top'">
+          <!-- <el-col :span="12">
+            <div class="grid-content">测试 </div>
+          </el-col> -->
+          <el-col :span="18" style="text-align:right;color:white;">
+            <el-button-group style="">
+              <el-button type="primary" @click="saveData">保存</el-button>
+              <el-button type="primary" @click="readData">读取</el-button>
+              <el-button type="primary" @click="dialogVisible = true">导出</el-button>
+              <el-button type="primary" @click="clearData">清空</el-button>
+            </el-button-group>
+            <el-button-group style="">
+              <el-tooltip effect="dark" content="在页面内打开选课系统" placement="bottom">
+                <el-button type="primary" @click="dialogXkVisible = true">快捷选课</el-button>
+              </el-tooltip>
+              <el-button type="primary" @click="dialogAboutVisible = true">关于</el-button>
+              <el-button type="primary" @click="shuhelper">返回SHUhelper</el-button>
+            </el-button-group>
+            <el-button type="success">已选学分:{{ credit }}</el-button>
+          </el-col>
+        </el-row>
+      </el-header>
+      <el-main style="padding:0;">
+        <el-row style="padding:10px 10px 0px 10px;">
+          <el-col :xs="8" :md="8" style="height:600px;">
+            <schedule :task-detail="courseSelected" @showDetail="showDetail" />
+          </el-col>
+          <el-col :xs="16" :md="16" style="height:600px;">
+            <el-tabs type="border-card" :tab-position="'top'" style="height:600px;">
               <el-tab-pane label="待选课程">
-                <waitcourse :courseWaited="courseWaited"
-                            @addSchedule="addSchedule"
-                            @delCourse="delCourse"/>
+                <waitcourse :courseWaited="courseWaited" @addSchedule="addSchedule" @delCourse="delCourse" />
               </el-tab-pane>
               <el-tab-pane label="搜索课程">
-                <searchcourse @addCourse="addCourse"/>
+                <searchcourse @addCourse="addCourse" />
               </el-tab-pane>
             </el-tabs>
           </el-col>
         </el-row>
       </el-main>
-      <el-dialog title="17-18春季学期选课系统"
-                    :visible.sync="dialogXkVisible"
-                    width="80%">
-      <el-row>
-        <el-col :span="6">
-          <ol>
-            <li v-for="item in courseWaited"
-                v-if="item.status=='已选入'">
-              {{ item.course_name }},{{item.teacher_name}},{{item.course_no}},{{item.teacher_no}}
-            </li>
-          </ol>
-        </el-col>
-        <el-col :span="18">
-          <iframe src="http://xk.autoisp.shu.edu.cn:8080/"
-                  width="100%"
-                  height="500"></iframe>
-        </el-col>
-      </el-row>
-    </el-dialog>
-    <el-dialog title="分享课表"
-                v-model="dialogShareVisible"
-                size="small">
-      <p align="center"
-          v-if="code==''">链接生成中请耐心等待...</p>
-      <p align="center"
-          v-if="code!=''">短链接已生成，您现在可以在任何地方通过
-        <a :href="'http://xk.shuhelper.cn/'+code"
-            target="_blank">http://xk.shuhelper.cn/{{ code }}</a>访问您的课表，也可以将这个链接分享给他人。</p>
-    </el-dialog>
-    <el-dialog title="关于我们"
-                :visible.sync="dialogAboutVisible"
-                size="small">
-      <p>排课助手(xk.shuhelper.cn)是SHUhelper的一部分，主要是为了解决排课过程中的困难而制作的小工具，主要实现了搜索课程并从心仪的课程中排列出一份完美的课表的功能。</p>
-      <p> 欢迎关注我们的微信公众号 搜索：
-        <span style="color:red;">shuhelper</span> 或扫描下方二维码</p>
-      <p align="center">
-        <img width="100"
-              src="https://static.shuhelper.cn/mp.jpg">
-      </p>
-      <p align="center">
-        <a href="https://github.com/cosformula/CourseSchedulingHelper"
-            target="_blank">开源代码</a>
-      </p>
-      <p align="center">
-        <img src="http://forthebadge.com/images/badges/built-with-love.svg" />
-        <img src="http://forthebadge.com/images/badges/uses-js.svg" />
-        <img src="http://forthebadge.com/images/badges/makes-people-smile.svg" />
-      </p>
-      <blockquote style="color:grey;">遇到问题请加qq群：
-        <span style="color:red;">368238744</span> 反馈</blockquote>
-      <blockquote style="color:grey;">Version 0.10.0 | admin@shuhelper.cn | SHUhelper 开发委员会</blockquote>
-      <blockquote>
-        <span style="color:red;">♥</span>
-        <span style="color:grey;">Do have faith in what you're doing.</span>
-      </blockquote>
-      <span slot="footer"
-            class="dialog-footer">
-        <el-button type="primary"
-                    @click="dialogAboutVisible = false">确 定</el-button>
-      </span>
-    </el-dialog>
-    <el-dialog title="当前选课结果"
-                :visible.sync="dialogVisible"
-                size="tiny">
-      <ol>
-        <li v-for="item in courseWaited"
-            v-if="item.status=='已选入'">
-          {{ item.course_name }},{{item.teacher_name}},{{item.course_no}},{{item.teacher_no}}
-        </li>
-      </ol>
-    </el-dialog>
+      <el-dialog title="18-19秋季学期选课系统" :visible.sync="dialogXkVisible" width="80%">
+        <el-row>
+          <el-col :span="6">
+            <ol>
+              <li v-for="item in courseWaited" v-if="item.status=='已选入'">
+                {{ item.course_name }},{{item.teacher_name}},{{item.course_no}},{{item.teacher_no}}
+              </li>
+            </ol>
+          </el-col>
+          <el-col :span="18">
+            <iframe src="http://xk.autoisp.shu.edu.cn:8080/" width="100%" height="500"></iframe>
+          </el-col>
+        </el-row>
+      </el-dialog>
+      <el-dialog title="分享课表" v-model="dialogShareVisible" size="small">
+        <p align="center" v-if="code==''">链接生成中请耐心等待...</p>
+        <p align="center" v-if="code!=''">短链接已生成，您现在可以在任何地方通过
+          <a :href="'http://xk.shuhelper.cn/'+code" target="_blank">http://xk.shuhelper.cn/{{ code }}</a>访问您的课表，也可以将这个链接分享给他人。</p>
+      </el-dialog>
+      <el-dialog title="关于我们" :visible.sync="dialogAboutVisible" size="small">
+        <p>排课助手(xk.shuhelper.cn)是SHUhelper的一部分，主要是为了解决排课过程中的困难而制作的小工具，主要实现了搜索课程并从心仪的课程中排列出一份完美的课表的功能。</p>
+        <p> 欢迎关注我们的微信公众号 搜索：
+          <span style="color:red;">shuhelper</span> 或扫描下方二维码</p>
+        <p align="center">
+          <img width="100" src="https://static.shuhelper.cn/mp.jpg">
+        </p>
+        <p align="center">
+          <a href="https://github.com/cosformula/CourseSchedulingHelper" target="_blank">开源代码</a>
+        </p>
+        <p align="center">
+          <img src="http://forthebadge.com/images/badges/built-with-love.svg" />
+          <img src="http://forthebadge.com/images/badges/uses-js.svg" />
+          <img src="http://forthebadge.com/images/badges/makes-people-smile.svg" />
+        </p>
+        <blockquote style="color:grey;">遇到问题请加qq群：
+          <span style="color:red;">368238744</span> 反馈</blockquote>
+        <blockquote style="color:grey;">Version 0.11.0 | admin@shuhelper.cn | SHUhelper 开发委员会</blockquote>
+        <blockquote>
+          <span style="color:red;">♥</span>
+          <span style="color:grey;">Do have faith in what you're doing.</span>
+        </blockquote>
+        <span slot="footer" class="dialog-footer">
+          <el-button type="primary" @click="dialogAboutVisible = false">确 定</el-button>
+        </span>
+      </el-dialog>
+      <el-dialog title="当前选课结果" :visible.sync="dialogVisible" size="tiny">
+        <ol>
+          <li v-for="item in courseWaited" v-if="item.status=='已选入'">
+            {{ item.course_name }},{{item.teacher_name}},{{item.course_no}},{{item.teacher_no}}
+          </li>
+        </ol>
+      </el-dialog>
     </el-container>
   </div>
 </template>
 
 <script>
+import TopNav from './components/TopNav.vue'
 import Schedule from './components/Schedule.vue'
 import Waitcourse from './components/Waitcourse.vue'
 import Searchcourse from './components/Searchcourse.vue'
@@ -138,7 +119,8 @@ export default {
   components: {
     Schedule,
     Waitcourse,
-    Searchcourse
+    Searchcourse,
+    TopNav
   },
   data() {
     return {
@@ -190,14 +172,22 @@ export default {
       return table
     },
     courseSelected: function() {
-      console.log('courseSelected')
+      // console.log('courseSelected')
       var selected = [[], [], [], [], []]
-      for (var i = this.courseWaited.length - 1; i >= 0; i--) {
+      // console.log(this.courseWaited)
+      for (let i = this.courseWaited.length - 1; i >= 0; i--) {
         if (this.courseWaited[i].status == '已选入') {
-          var timelist = this.coursetimeToNum(this.courseWaited[i].time)
-          var color = ['#2B2E4A', '#521262', '#903749', '#53354A', '#40514E', '#537780']
+          // debugger
+          let timeString = this.courseWaited[i].time
+          // console.log(this.courseWaited[i])
+          // debugger
+          var timelist = this.coursetimeToNum(timeString)
+          var color = ['#2B2E4A', '#521262', '#903749', '#53354A', '#40514E', '#537780', '#3765a4', '#76a5a4', '#579870', '#e391b4', '#b8954e']
           var course = this.courseWaited[i]
-          var rancolor = color[~~(Math.random() * color.length)]
+          let colorIndex = Math.abs(this.hashCode(course.course_name) % color.length)
+          console.log(colorIndex)
+          var rancolor = color[colorIndex]
+
           for (var j = timelist.length - 1; j >= 0; j--) {
             var time = timelist[j]
             var item = {
@@ -205,9 +195,9 @@ export default {
               Start: time.Start,
               End: time.End,
               coursename: course.course_name,
-              courseno: course.course_no,
+              course_no: course.course_no,
               teachname: course.teacher_name,
-              teachno: course.teacher_no,
+              teacher_no: course.teacher_no,
               status: course.status,
               styleObj: {
                 height: (time.End - time.Start + 1) * 7.7 + '%',
@@ -223,6 +213,13 @@ export default {
     }
   },
   methods: {
+    hashCode: function(s) {
+      var h = 0,
+        l = s.length,
+        i = 0
+      if (l > 0) while (i < l) h = ((h << 5) - h + s.charCodeAt(i++)) | 0
+      return h
+    },
     getCode: function() {
       return decodeURIComponent((new RegExp('n/' + '([^&;]+?)(&|#|;|$)').exec(location.href) || [, ''])[1].replace(/\+/g, '%20')) || null
     },
@@ -269,7 +266,8 @@ export default {
             message: '删除成功!'
           })
         })
-        .catch(() => {
+        .catch(err => {
+          // console.log(err)
           this.$message({
             type: 'info',
             message: '已取消删除'
@@ -299,6 +297,8 @@ export default {
       }
     },
     coursetimeToNum(time) {
+      // debugger
+      // console.log(time)
       var patt = /([\u4e00|\u4e8c|\u4e09|\u56db|\u4e94])([0-9]+)-([0-9]+)\s*(?:([\u5355|\u53cc|])|\((?:([0-9]+)-([0-9]+)\u5468)\)|\((?:([0-9]+),([0-9]+)\u5468)\))*/
       var timelist = []
       var str = time
@@ -312,9 +312,11 @@ export default {
         }
         timelist.push(item)
       }
+      // console.log('success to num', timelist)
       return timelist
     },
     locateCourse(course) {
+      // console.log(course, 'locate')
       for (var i = this.courseWaited.length - 1; i >= 0; i--) {
         if (this.courseWaited[i].course_no == course.course_no && this.courseWaited[i].teacher_no == course.teacher_no) {
           return i
@@ -345,11 +347,11 @@ export default {
           message: '已将此课程加入课程表',
           type: 'success'
         })
+        // this.$http.get(`/api/courses/${this.courseWaited[index]._id.$oid}`)
       }
     },
     delCourse: function(course) {
       var index = this.locateCourse(course)
-      console.log('delcourse')
       if (course.status == '已选入') {
         this.$set(this.courseWaited[index], 'status', '待加入')
       } else {
@@ -368,13 +370,23 @@ export default {
         type: 'success'
       })
     },
+    refreshData() {
+      for (let i = 0; i < this.courseWaited.length; i++) {
+        let course = this.courseWaited[i]
+        this.$http.get(`/api/courses/class/${course._id.$oid}`).then(response => {
+          this.courseWaited[i] = response.data.course
+        })
+      }
+    },
     readData() {
       if (JSON.parse(localStorage.getItem('courseWaited'))) {
-        this.courseWaited = JSON.parse(localStorage.getItem('courseWaited'))
+        let courses = JSON.parse(localStorage.getItem('courseWaited'))
+        this.courseWaited.push(...courses)
         this.$message({
           message: '已成功读取上次的数据',
           type: 'success'
         })
+        this.refreshData()
       } else {
         this.$message({
           message: '无数据',
@@ -413,6 +425,6 @@ export default {
 <style>
 html body {
   font-family: Helvetica, sans-serif;
-  margin:0;
+  margin: 0;
 }
 </style>

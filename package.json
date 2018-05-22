@@ -8,8 +8,8 @@
     "build": "rimraf dist && webpack -p --progress --hide-modules"
   },
   "dependencies": {
-    "element-ui": "^2.0.11",
-    "vue": "^2.5.13",
+    "element-ui": "^2.3.9",
+    "vue": "^2.5.16",
     "vue-resource": "^1.1.1"
   },
   "engines": {
@@ -33,7 +33,7 @@
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
     "vue-loader": "^10.0.0",
-    "vue-template-compiler": "^2.1.8",
+    "vue-template-compiler": "^2.5.16",
     "webpack": "^2.2.0-rc.4",
     "webpack-dev-server": "2.5.1"
   }

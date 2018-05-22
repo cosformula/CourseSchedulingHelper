@@ -1,8 +1,8 @@
 <template>
   <el-table
     :data="courseWaited"
-    highlight-current-row 
-    max-height="700"
+    highlight-current-row
+    height="500"
     border>
     <el-table-column label="操作"   width="150">
       <template scope="scope">

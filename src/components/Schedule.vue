@@ -1,30 +1,27 @@
 <template>
-    <div class="schedule">
-    	<div class="time-ground">
-				<div style="height:3.8%;"></div>
-				<div v-for="time in timeGround" style="height:7.4%;margin:0">
-				<span>{{time}}</span>
-				</div>
-    	</div>
-    	<div class="task-ground">
-				<div v-for="(week,index) in weekGround" class="task-list">
-    				<div style="height:3.8%;width:100%;">
-						<p style="margin:0;">{{week}}</p>
-						</div>
-    				<div class="taskListSty">
-              <div class="task-list-item" 
-                  v-for="detail in taskDetail[index]" 
-                  :style="detail.styleObj" 
-                  @click="showDetail(detail)">
-                <div>
-    						<h5>{{detail.coursename}}</h5>
-                <p>{{detail.teachname}}</p>
-                </div>
-    					</div>
-    				</div>
-    			</div>
-    	</div>
+  <div class="schedule">
+    <div class="time-ground">
+      <div style="height:3.8%;"></div>
+      <div v-for="time in timeGround" style="height:7.4%;margin:0">
+        <span>{{time}}</span>
+      </div>
     </div>
+    <div class="task-ground">
+      <div v-for="(week,index) in weekGround" class="task-list">
+        <div style="height:3.8%;width:100%;">
+          <p style="margin:0;">{{week}}</p>
+        </div>
+        <div class="taskListSty">
+          <div class="task-list-item" v-for="detail in taskDetail[index]" :style="detail.styleObj" @click="showDetail(detail)">
+            <div>
+              <p style="font-weight:bold;">{{detail.coursename}}</p>
+              <p>{{detail.teachname}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -132,6 +129,7 @@ export default {
   methods: {
     showDetail(obj) {
       console.log('showDetail raw')
+      console.log(obj)
       this.$emit('showDetail', obj)
     }
   }
