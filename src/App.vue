@@ -18,7 +18,7 @@
           <el-col :span="8">
             <div class="grid-content" style="text-align:center;font-size:20px;color:white;">
               上海大学排课助手
-              <span style="color:#eee;font-size:0.8rem;"> 17-18年春</span>
+              <span style="color:#eee;font-size:0.8rem;"> 18-19年秋</span>
             </div>
           </el-col>
           <el-col :span="8" style="text-align:right;color:white;">
@@ -39,13 +39,13 @@
           </el-col>
         </el-row>
       </el-header>
-      <el-main style="padding:0;">
-        <el-row style="padding:10px 10px 0px 10px;">
-          <el-col :xs="8" :md="8" style="height:600px;">
+      <el-main style="padding:0;box-sizing:border-box;height:100%;">
+        <el-row style="padding:10px 10px 0px 10px;height:calc(100vh - 70px);">
+          <el-col :xs="8" :md="8" style="height:100%;">
             <schedule :task-detail="courseSelected" @showDetail="showDetail" />
           </el-col>
-          <el-col :xs="16" :md="16" style="height:600px;">
-            <el-tabs type="border-card" :tab-position="'top'" style="height:600px;">
+          <el-col :xs="16" :md="16" style="height:100%;">
+            <el-tabs type="border-card" :tab-position="'top'" style="height:calc(100% - 60px);">
               <el-tab-pane label="待选课程">
                 <waitcourse :courseWaited="courseWaited" @addSchedule="addSchedule" @delCourse="delCourse" />
               </el-tab-pane>

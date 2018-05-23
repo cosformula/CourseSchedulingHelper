@@ -26,7 +26,6 @@
       </el-form-item>
     </el-form>
     <el-table :data="tableData" highlight-current-row border height="400">
-
       <el-table-column label="操作" width="150">
         <template scope="scope">
           <el-button size="small" @click="addWait(scope.$index, scope.row)">加入待选课程</el-button>

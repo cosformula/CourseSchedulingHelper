@@ -52,7 +52,7 @@
     <el-table-column
       prop="time"
       label="时间"
-      width="100"
+      width="150"
       sortable>
     </el-table-column>
     <el-table-column prop="enroll" label="人数" width="90" sortable>
