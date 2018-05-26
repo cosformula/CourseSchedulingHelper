@@ -147,14 +147,13 @@ export default {
   },
   created: function() {
     // var code = this.getCode()
-
     // if (code == null) {
     //   this.readData()
     // } else {
     //   this.pull(code)
     // }
   },
-  mounted(){
+  mounted() {
     this.readData()
   },
   computed: {
@@ -400,8 +399,13 @@ export default {
       }
     },
     readData() {
-      if (JSON.parse(localStorage.getItem('courseWaited:18:1'))) {
-        let courses = JSON.parse(localStorage.getItem('courseWaited'))
+      let courses
+      try {
+        courses = JSON.parse(localStorage.getItem('courseWaited'))
+      } catch (error) {
+        courses = []
+      }
+      if (courses.length) {
         this.courseWaited = []
         this.courseWaited.push(...courses)
         this.$message({
