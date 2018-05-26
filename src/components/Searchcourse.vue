@@ -2,19 +2,19 @@
   <div @keyup.enter="onsubmit">
     <el-form :inline="true" size="mini" ref="form" :model="form" label-width="55px">
       <el-form-item label="课程号">
-        <el-input v-model="form.courseno"></el-input>
+        <el-input v-model.trim.lazy="form.courseno"></el-input>
       </el-form-item>
       <el-form-item label="课程名">
-        <el-input v-model="form.coursename"></el-input>
+        <el-input v-model.trim.lazy="form.coursename"></el-input>
       </el-form-item>
       <el-form-item label="教师名">
-        <el-input v-model="form.teachname"></el-input>
+        <el-input v-model.trim.lazy="form.teachname"></el-input>
       </el-form-item>
       <el-form-item label="学分">
-        <el-input v-model="form.credit"></el-input>
+        <el-input v-model.trim.lazy="form.credit"></el-input>
       </el-form-item>
       <el-form-item label="时间">
-        <el-input placeholder="格式：一1-2" v-model="form.coursetime"></el-input>
+        <el-input placeholder="格式：一1-2" v-model.trim.lazy="form.coursetime"></el-input>
       </el-form-item>
       <el-form-item label="校区">
         <el-select v-model="form.campus" placeholder="请选择校区">
@@ -114,7 +114,7 @@ export default {
     },
     handlePageCurrentChange(val) {
       this.page = val
-      this.tableData = []
+      // this.tableData = []
       this.query()
     },
     query() {

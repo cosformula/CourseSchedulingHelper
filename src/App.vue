@@ -3,7 +3,6 @@
     <el-container style="height:100vh;">
       <el-header style="background: #99a9bf;">
         <el-row style="height:100%;color:white;" justify="space-between" type="flex" align="middle">
-
           <!-- <el-col :span="12">
             <div class="grid-content">测试 </div>
           </el-col> -->
@@ -147,12 +146,16 @@ export default {
     }
   },
   created: function() {
-    var code = this.getCode()
-    if (code == null) {
-      this.readData()
-    } else {
-      this.pull(code)
-    }
+    // var code = this.getCode()
+
+    // if (code == null) {
+    //   this.readData()
+    // } else {
+    //   this.pull(code)
+    // }
+  },
+  mounted(){
+    this.readData()
   },
   computed: {
     credit: function() {
@@ -390,14 +393,14 @@ export default {
         this.$http.get(`/api/courses/class/${course._id.$oid}`).then(response => {
           let status = course.status
           let newCourse = response.data.course
-          this.courseWaited[i].capacity = course.capacity
-          this.courseWaited[i].enroll = course.enroll
-          this.courseWaited[i].teacher_name = course.teacher_name
+          this.courseWaited[i].capacity = newCourse.capacity
+          this.courseWaited[i].enroll = newCourse.enroll
+          this.courseWaited[i].teacher_name = newCourse.teacher_name
         })
       }
     },
     readData() {
-      if (JSON.parse(localStorage.getItem('courseWaited'))) {
+      if (JSON.parse(localStorage.getItem('courseWaited:18:1'))) {
         let courses = JSON.parse(localStorage.getItem('courseWaited'))
         this.courseWaited = []
         this.courseWaited.push(...courses)
