@@ -120,7 +120,7 @@ export default {
     query() {
       this.$http
         .get(
-          '/api/courses/?term=2018_1&type=advance&no=' +
+          '/api/courses/?term=2018_2&type=advance&no=' +
             this.form.courseno +
             '&name=' +
             this.form.coursename +

@@ -17,7 +17,7 @@
           <el-col :span="8">
             <div class="grid-content" style="text-align:center;font-size:20px;color:white;">
               上海大学排课助手
-              <span style="color:#eee;font-size:0.8rem;"> 18-19年秋</span>
+              <span style="color:#eee;font-size:0.8rem;"> 18-19年冬</span>
             </div>
           </el-col>
           <el-col :span="8" style="text-align:right;color:white;">
