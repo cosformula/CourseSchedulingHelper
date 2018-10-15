@@ -55,7 +55,7 @@
           </el-col>
         </el-row>
       </el-main>
-      <el-dialog fullscreen title="18-19秋季学期选课系统" :visible.sync="dialogXkVisible">
+      <el-dialog fullscreen title="18-19冬季学期选课系统" :visible.sync="dialogXkVisible">
         <el-row>
           <el-col :span="4">
             <ol>
@@ -65,7 +65,7 @@
             </ol>
           </el-col>
           <el-col :span="20">
-            <iframe src="http://xk.autoisp.shu.edu.cn:8080/" width="100%" height="600"></iframe>
+            <iframe src="http://xk.autoisp.shu.edu.cn:80/" width="100%" height="600"></iframe>
           </el-col>
         </el-row>
       </el-dialog>
@@ -142,7 +142,8 @@ export default {
       dialogAboutVisible: false,
       dialogVisible: false,
       dialogShareVisible: false,
-      code: ''
+      code: '',
+      storageKey: 'courseWaited:18-2'
     }
   },
   created: function() {
@@ -380,7 +381,7 @@ export default {
     },
     saveData() {
       var courseWaited = JSON.stringify(this.courseWaited)
-      localStorage.setItem('courseWaited', courseWaited)
+      localStorage.setItem(this.storageKey, courseWaited)
       this.$message({
         message: '已成功保存当前状态',
         type: 'success'
@@ -401,7 +402,7 @@ export default {
     readData() {
       let courses
       try {
-        courses = JSON.parse(localStorage.getItem('courseWaited'))
+        courses = JSON.parse(localStorage.getItem(this.storageKey))
       } catch (error) {
         courses = []
       }
