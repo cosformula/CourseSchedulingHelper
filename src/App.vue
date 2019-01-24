@@ -17,7 +17,7 @@
           <el-col :span="8">
             <div class="grid-content" style="text-align:center;font-size:20px;color:white;">
               上海大学排课助手
-              <span style="color:#eee;font-size:0.8rem;"> 18-19年冬</span>
+              <span style="color:#eee;font-size:0.8rem;"> 18-19年春</span>
             </div>
           </el-col>
           <el-col :span="8" style="text-align:right;color:white;">
@@ -55,9 +55,10 @@
           </el-col>
         </el-row>
       </el-main>
-      <el-dialog fullscreen title="18-19冬季学期选课系统" :visible.sync="dialogXkVisible">
+      <el-dialog fullscreen title="18-19春季学期选课系统" :visible.sync="dialogXkVisible">
         <el-row>
           <el-col :span="4">
+            <ol v-if="!necessaryCourse" style="color:red">别忘了选形势与政策哦 ≧ω≦ </ol>
             <ol>
               <li v-for="item in courseWaited" v-if="item.status=='已选入'">
                 {{ item.course_name }}，{{item.teacher_name}}<br/>课程号：{{item.course_no}}<br/>教师号：{{item.teacher_no}}
@@ -65,7 +66,7 @@
             </ol>
           </el-col>
           <el-col :span="20">
-            <iframe src="http://xk.autoisp.shu.edu.cn:80/" width="100%" height="600"></iframe>
+            <iframe src="http://xk.autoisp.shu.edu.cn:8080/" width="100%" height="600"></iframe>
           </el-col>
         </el-row>
       </el-dialog>
@@ -143,7 +144,8 @@ export default {
       dialogVisible: false,
       dialogShareVisible: false,
       code: '',
-      storageKey: 'courseWaited:18-2'
+      necessaryCourse: false,
+      storageKey: 'courseWaited:18-3'
     }
   },
   created: function() {
@@ -227,6 +229,20 @@ export default {
         }
       }
       return selected
+    }
+  },
+  watch: {
+    courseWaited:{
+      handler:function(){
+        let conflig =0
+        for(let course of this.courseWaited){
+          if(course.course_name == "形势与政策")
+            conflig = 1
+        }
+        if(conflig) this.necessaryCourse = true
+        else this.necessaryCourse = false
+      },
+      deep:true
     }
   },
   methods: {
@@ -380,12 +396,35 @@ export default {
       })
     },
     saveData() {
-      var courseWaited = JSON.stringify(this.courseWaited)
-      localStorage.setItem(this.storageKey, courseWaited)
-      this.$message({
-        message: '已成功保存当前状态',
-        type: 'success'
+      let conflig =0
+      for(let course of this.courseWaited){
+        if(course.course_name == "形势与政策")
+          conflig = 1;
+      }
+      if(conflig == 0){
+        this.$confirm('你还没有选形势与政策，要现在去选吗？','小提示',{
+          confirmButtomText:'好的',
+          cancelButtonText: '不用啦',
+          type: 'warning'
+        }).then(()=>{
+          return 0
+        }).catch(()=>{
+          var courseWaited = JSON.stringify(this.courseWaited)
+          localStorage.setItem(this.storageKey, courseWaited)
+          this.$message({
+          message: '已成功保存当前状态',
+          type: 'success'
+        })
       })
+      }
+      else{
+          var courseWaited = JSON.stringify(this.courseWaited)
+          localStorage.setItem(this.storageKey, courseWaited)
+          this.$message({
+          message: '已成功保存当前状态',
+          type: 'success'
+          })
+      }
     },
     refreshData() {
       for (let i = 0; i < this.courseWaited.length; i++) {
